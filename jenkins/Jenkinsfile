@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Deliver') { 
             steps {
-                echo 'Deliver Jenkins Job'
+                echo 'Deliver Jenkins Job !'
             }
         }
     }
