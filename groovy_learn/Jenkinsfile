@@ -140,10 +140,18 @@ pipeline{
         {
             steps{
                 script{
-                    // calling the deployment function inside
+                    // Solution#1 calling the deployment function defined outside
                     def envs=['test','demo','prod']
                     for (env in envs) {
                         genericDeployment(env)
+                    }
+
+                    //Solution#2 use a lamda closure inside the script
+                    def call_deployment_func={deply_env-> 
+                        echo "Deployed to ${deployedEnvironment} ..."
+                    } 
+                    for (env in envs) {
+                        call_deployment_func(env)
                     }
                 }
             }
