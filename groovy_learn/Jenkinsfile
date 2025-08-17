@@ -7,7 +7,7 @@ pipeline{
      
     }
     stages{
-        stage("groovy_variables")
+        stage("Stage-Test groovy_variables")
         {
         
             steps{
@@ -17,10 +17,10 @@ pipeline{
                 script{
                        def list=["Bangalore","Delhi","Bhubaneswar"]
                        def map=[env_name:'prod']
-                    for (location in env.list){
-                        echo "${name} is open to work in ${location}"
+                    for (location in list){
+                        echo "${env.name} is open to work in ${location}"
                     }
-                echo "We are ready to deploy in ${env.map}"
+                echo "We are ready to deploy in ${map['env_name']}"
                 }
             }
         }
