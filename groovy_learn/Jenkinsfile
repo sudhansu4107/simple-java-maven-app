@@ -1,10 +1,10 @@
 pipeline{
     environment{
-        name='sudhansu'
-        age=28
-        isEmployed=true
+        def name='sudhansu'
+        def age=28
+        def isEmployed=true
         def list=["Bangalore","Delhi","Bhubaneswar"]
-        def map={env:'prod'} 
+        def map=[env_name:'prod']
     }
     stages{
         stage("groovy_variables")
