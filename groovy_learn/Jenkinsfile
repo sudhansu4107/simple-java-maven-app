@@ -1,26 +1,44 @@
 pipeline{
     agent any
+    // declaring the environment block
     environment{
          name='sudhansu'
-        age=28
-        isEmployed=true
-     
+         age=28
+         isEmployed=true
     }
+    // Declaring the parameters
+    parameters{
+        booleanParam(name:"deploymentReady",default:false,description:"Are we ready to deploy ?")
+        choice(name:"environment",choices:['dev','test','production'],description:"Please choose which environment to deploy ?")
+        stringParam(name:"author",default:'admin',description:"Please provide your name?")
+
+    }
+
     stages{
+        stage("Deployment-config"){
+            echo """Deployment process initiated \n
+            we are ready to deploy :${params.deploymentReady} \n
+            we are ready to deploy into Environment:${params.environment} \n
+            we are ready to deploy into Author:${params.author}
+            """
+        }
         stage("Stage-Test groovy_variables")
         {
         
             steps{
-                echo """Jenkins pipeline created by the author :${env.name} \n
-                Age:${env.age} \n he is already employed:${env.isEmployed} \n           
+                echo """
+                Jenkins pipeline created by the author :${env.name.toString()} \n
+                Age:${env.age.toInteger()} \n 
+                he is already employed:${env.isEmployed.toBoolean()} \n           
                 """
                 script{
-                       def list=["Bangalore","Delhi","Bhubaneswar"]
-                       def map=[env_name:'prod']
-                    for (location in list){
-                        echo "${env.name} is open to work in ${location}"
-                    }
-                echo "We are ready to deploy in ${map['env_name']}"
+                       def list=["Bangalore","Delhi","Bhubaneswar"]  //Declaring the list variable type
+                       def map=[env_name:'prod']   // Declaring the map variable type
+                        for (location in list){
+                            echo "${env.name} is open to work in ${location}"
+                        }
+                echo "We are ready to deploy in ${map['env_name']}"  // Calling the map type variable
+                echo "print the Datatype of name ${env.name.getClass()}"   // getting the data type of name variable
                 }
             }
         }
