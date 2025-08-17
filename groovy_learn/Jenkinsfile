@@ -129,5 +129,20 @@ pipeline{
           }
 
         }
+        stage("Stage-Function steps")
+        {
+            steps{
+                script{
+                    def genericDeployment(String deployedEnvironment)
+                    {
+                        echo "Deployed to ${deployedEnvironment} ..."
+                    }
+                    def envs=['test','demo','prod']
+                    for env in envs {
+                        echo " Deploying to env: ${env}"
+                }
+                }
+            }
+        }
     }
 }
