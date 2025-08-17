@@ -68,8 +68,10 @@ pipeline{
                         {
                             break
                         }
-                      
+                        else
+                        {
                             echo "Iteration ${i}."
+                        }
                         }
                     }
                 }
