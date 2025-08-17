@@ -88,7 +88,7 @@ pipeline{
                         case 'production':
                             echo "${params.environment}- Build deployed."
                             break
-                        default
+                        default:
                             echo "It's a unknown environment."
                     }
                 }
