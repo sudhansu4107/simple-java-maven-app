@@ -138,9 +138,9 @@ pipeline{
                         echo "Deployed to ${deployedEnvironment} ..."
                     }
                     def envs=['test','demo','prod']
-                    for env in envs {
+                    for (env in envs) {
                         echo " Deploying to env: ${env}"
-                }
+                    }
                 }
             }
         }
