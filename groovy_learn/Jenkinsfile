@@ -113,17 +113,18 @@ pipeline{
           {
             script
             {
-                  echo "Exploring the Jenkins Build-In-Function."
+                echo "Exploring the Jenkins Build-In-Function."
                 // Change the built in result
                 if (2==3){
                     currentBuild.result="SUCCESS"
+                    echo "Current build result is :${currentBuild.result}"
                     return
                 }
                 else{
                     currentBuild.result=='FAILURE'
+                    echo "Current build result is :${currentBuild.result}"
                     return
                 }
-                echo "Current build result is :${currentBuild.result}"
             }
           }
 
