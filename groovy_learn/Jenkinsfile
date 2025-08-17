@@ -17,11 +17,19 @@ pipeline{
     stages{
         stage("Deployment-config"){
             steps{
-                echo """Deployment process initiated \n
+            script{
+                if(params.deploymentReady){
+                        echo """Deployment process initiated \n
             we are ready to deploy :${params.deploymentReady} \n
             we are ready to deploy into Environment:${params.environment} \n
             we are ready to deploy into Author:${params.author}
             """
+            }
+            else{
+                echo "We are not ready yet ! \n
+                hence we are skipping this deployment."
+            }
+                }
             }
         }
         stage("Stage-Test groovy_variables")
