@@ -11,7 +11,6 @@ pipeline{
         booleanParam(name:"deploymentReady",defaultValue:false,description:"Are we ready to deploy ?")
         choice(name:"environment",choices:['dev','test','production'],description:"Please choose which environment to deploy ?")
         string(name:"author",defaultValue:'admin',description:"Please provide your name?")
-
     }
 
     stages{
@@ -48,6 +47,19 @@ pipeline{
                         }
                 echo "We are ready to deploy in ${map['env_name']}"  // Calling the map type variable
                 echo "print the Datatype of name ${env.name.getClass()}"   // getting the data type of name variable
+                }
+            }
+        }
+        stage("For loop trial stage")
+        {
+            steps
+            {
+                script
+                {
+                    for(i=0,i<10,i++)
+                    {
+                        echo "Iteration ${i}."
+                    }
                 }
             }
         }
