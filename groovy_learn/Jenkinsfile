@@ -121,7 +121,7 @@ pipeline{
                     return
                 }
                 else{
-                    currentBuild.result=='FAILURE'
+                    currentBuild.result='FAILURE'
                     echo "Current build result is :${currentBuild.result}"
                     return
                 }
