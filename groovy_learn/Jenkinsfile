@@ -139,7 +139,7 @@ pipeline{
                     }
                     def envs=['test','demo','prod']
                     for (env in envs) {
-                        genericDeployment(env)"
+                        genericDeployment(env)
                     }
                 }
             }
