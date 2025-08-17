@@ -26,8 +26,7 @@ pipeline{
             """
             }
             else{
-                echo "We are not ready yet ! \n
-                hence we are skipping this deployment."
+                echo """We are not ready yet ! \n hence we are skipping this deployment."""
             }
                 }
             }
