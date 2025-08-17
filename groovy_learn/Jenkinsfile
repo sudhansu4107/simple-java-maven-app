@@ -75,5 +75,23 @@ pipeline{
                     }
                 }
             }
+            stage("Stage- Switch case")
+            {
+                steps{
+                    switch(params.environment) {
+                        case 'dev':
+                            echo "${params.environment}- Build deployed."
+                            break
+                        case 'test':
+                            echo "${params.environment}- Build deployed."
+                            break
+                        case 'production':
+                            echo "${params.environment}- Build deployed."
+                            break
+                        default
+                            echo "It's a unknown environment."
+                    }
+                }
+            }
         }
     }
