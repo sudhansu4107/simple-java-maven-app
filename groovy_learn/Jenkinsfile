@@ -1,4 +1,5 @@
 pipeline{
+    agent any
     environment{
          name='sudhansu'
         age=28
