@@ -78,7 +78,8 @@ pipeline{
             stage("Stage- Switch case")
             {
                 steps{
-                    switch(${params.environment}) {
+                   script{
+                     switch(${params.environment}) {
                         case 'dev':
                             echo "${params.environment}- Build deployed."
                             break
@@ -90,7 +91,7 @@ pipeline{
                             break
                         default:
                             echo "It's a unknown environment."
-                    }
+                   }
                 }
             }
         }
