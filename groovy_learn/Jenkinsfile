@@ -1,10 +1,9 @@
 pipeline{
     environment{
-        def name='sudhansu'
-        def age=28
-        def isEmployed=true
-        def list=["Bangalore","Delhi","Bhubaneswar"]
-        def map=[env_name:'prod']
+         name='sudhansu'
+        age=28
+        isEmployed=true
+     
     }
     stages{
         stage("groovy_variables")
@@ -15,10 +14,12 @@ pipeline{
                 Age:${env.age} \n he is already employed:${env.isEmployed} \n           
                 """
                 script{
+                       def list=["Bangalore","Delhi","Bhubaneswar"]
+                       def map=[env_name:'prod']
                     for (location in env.list){
                         echo "${name} is open to work in ${location}"
                     }
-                echov "We are ready to deploy in ${env.map}"
+                echo "We are ready to deploy in ${env.map}"
                 }
             }
         }
