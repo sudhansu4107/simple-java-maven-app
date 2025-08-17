@@ -147,8 +147,7 @@ pipeline{
                     }
 
                     //Solution#2 use a lamda closure inside the script
-                    def call_deployment_func={deply_env-> 
-                        echo "Deployed to ${deployedEnvironment} ..."
+                    def call_deployment_func={deply_env-> echo "Deployed to ${deply_env} ..."
                     } 
                     for (env in envs) {
                         call_deployment_func(env)
