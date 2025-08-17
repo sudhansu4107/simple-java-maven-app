@@ -58,12 +58,16 @@ pipeline{
                 {
                     for(int i=0;i<10;i++)
                     {
-                        echo "Iteration ${i}."
-
+               
                         // Adding a continue statement at 6
                         if (i.toInteger()==6)
                         {
                             continue
+                        }
+                        else
+                        {
+                            echo "Iteration ${i}."
+
                         }
                     }
                 }
