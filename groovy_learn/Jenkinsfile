@@ -8,9 +8,9 @@ pipeline{
     }
     // Declaring the parameters
     parameters{
-        booleanParam(name:"deploymentReady",default:false,description:"Are we ready to deploy ?")
+        booleanParam(name:"deploymentReady",defaultValue:false,description:"Are we ready to deploy ?")
         choice(name:"environment",choices:['dev','test','production'],description:"Please choose which environment to deploy ?")
-        stringParam(name:"author",default:'admin',description:"Please provide your name?")
+        stringParam(name:"author",defaultValue:'admin',description:"Please provide your name?")
 
     }
 
