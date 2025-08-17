@@ -109,17 +109,23 @@ pipeline{
         }
         stage('Jenkins Build in Functions')
         {
-            echo "Exploring the Jenkins Build-In-Function."
-            // Change the built in result
-            if (2==3){
-                currentBuild.result="SUCCESS"
-                return
+          steps
+          {
+            script
+            {
+                  echo "Exploring the Jenkins Build-In-Function."
+                // Change the built in result
+                if (2==3){
+                    currentBuild.result="SUCCESS"
+                    return
+                }
+                else{
+                    currentBuild.result=='FAILURE'
+                    return
+                }
+                echo "Current build result is :${currentBuild.result}"
             }
-            else{
-                currentBuild.result=='FAILURE'
-                return
-            }
-            echo "Current build result is :${currentBuild.result}"
+          }
 
         }
     }
