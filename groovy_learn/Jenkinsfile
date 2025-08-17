@@ -102,6 +102,7 @@ pipeline{
                     def count=0
                     while(count<3){
                         echo "Iteration ${count} occured."
+                        count++
                     }
                 }
             }
