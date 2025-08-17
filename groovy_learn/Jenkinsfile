@@ -139,7 +139,7 @@ pipeline{
                     }
                     def envs=['test','demo','prod']
                     for (env in envs) {
-                        echo " Deploying to env: ${env}"
+                        genericDeployment(env)"
                     }
                 }
             }
