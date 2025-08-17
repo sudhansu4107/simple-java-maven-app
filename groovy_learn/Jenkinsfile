@@ -78,7 +78,7 @@ pipeline{
             stage("Stage- Switch case")
             {
                 steps{
-                    switch(params.environment) {
+                    switch(${params.environment}) {
                         case 'dev':
                             echo "${params.environment}- Build deployed."
                             break
