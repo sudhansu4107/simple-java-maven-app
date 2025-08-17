@@ -1,0 +1,23 @@
+pipeline{
+    agent any
+    environment{
+        def name='sudhansu'
+        def age=28
+        def eligible_for_vote=true
+    }
+    stages{
+        stage("Function Stage")
+        {
+            steps{
+                voterFunction(name,age,eligible_for_vote)
+            }
+        }
+    }
+}
+
+def voterFunction(String name, int age, boolean isEligible){
+    echo "name is ${name} \n"
+    echo "age is ${age} \n"
+    echo "eligible for vote ${isEligible} \n"
+
+}

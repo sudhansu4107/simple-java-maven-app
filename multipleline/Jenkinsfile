@@ -1,0 +1,18 @@
+pipeline{
+    angent any
+    stages{
+        stage("Deployment stage")
+        {
+            steps
+            {
+                sh """     # Inside this we can write multiline shell command
+                
+                """
+
+                bat """  inside this we are write multiple cmd commdand for windows
+                
+                """
+            }
+        }
+    }
+}

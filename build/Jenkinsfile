@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage("Test") {
+            steps {
+                echo "Build test stage"
+            }
+        }
+        
+        stage("Build Stage") {
+            steps {
+                build job: "Parameter_test_pipeline", 
+                      parameters: [
+                          booleanParam(name: "myBoolean", value: true)
+                      ]
+            }
+        }
+    }
+}

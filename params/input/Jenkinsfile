@@ -1,0 +1,16 @@
+pipeline{
+    agent any
+    parameters{
+        choice(choices:["EU-WEST-2A","EU-WEST-2B","EU-WEST-2C"],description:"which environment to deploy",name:"deployEnv")
+        booleanParam(defaultValue:false,description:"are we going to deploy ?",name:"isReady")
+    }
+    stages{
+        stage("Deploy Environment")
+        {
+            steps{
+                echo "Deployed to env:${params.deployEnv}"
+                echo "ready to deploy:${params.isReady}"
+            }
+        }
+    }
+}

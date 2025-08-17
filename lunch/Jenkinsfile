@@ -1,0 +1,23 @@
+pipeline{
+    agent any
+    parameters{
+        booleanParam(defaultValue:false, description:"Ready to deploy ?", name:"Deploy")
+    }
+    stages{
+        stage("Deployment Stage")
+        {
+            steps{
+                script{
+                    if (params.Deploy==false){
+                        currentBuild.result='SUCCESS'
+                        return
+                    }
+                    else
+                    {
+                        echo "set to deploy status:${params.Deploy}"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+    environment{
+        def myString='Sudhansu'
+        def age=28
+        def isWorking=true
+    }
+    stages{
+        stage("Variables setup")
+        {
+            steps
+            {
+                echo " Name is : ${myString} \n"
+                 echo " age is : ${age} \n"
+                  echo " working is : ${isWorking} \n"
+                  echo "Build number is :{env.BUILD_NUMBER}"
+            }
+        }
+    }
+}
