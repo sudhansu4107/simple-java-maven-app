@@ -1,0 +1,26 @@
+pipeline{
+    environment{
+        name='sudhansu'
+        age=28
+        isEmployed=true
+        def list=["Bangalore","Delhi","Bhubaneswar"]
+        def map={env:'prod'} 
+    }
+    stages{
+        stage("groovy_variables")
+        {
+        
+            steps{
+                echo """Jenkins pipeline created by the author :${env.name} \n
+                Age:${env.age} \n he is already employed:${env.isEmployed} \n           
+                """
+                script{
+                    for (location in env.list){
+                        echo "${name} is open to work in ${location}"
+                    }
+                echov "We are ready to deploy in ${env.map}"
+                }
+            }
+        }
+    }
+}
