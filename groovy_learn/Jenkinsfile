@@ -95,5 +95,16 @@ pipeline{
                 }
             }
         }
+        stage("Stage-While loop")
+        {
+            steps{
+                script{
+                    def count=0
+                    while(count<3){
+                        echo "Iteration ${count} occured."
+                    }
+                }
+            }
+        }
     }
 }
