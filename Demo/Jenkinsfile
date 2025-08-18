@@ -17,6 +17,9 @@ pipeline
             {
                 echo "trigger_job_stage started.."
                 sleep(5)
+                echo "ready to deploy :${params.deployment_ready}"
+                echo "Choice to deploy :${params.deployEnvironment}"
+                echo "author name :${params.authorName}"
                 echo "trigger_job_stage completed.."
 
             }
