@@ -16,7 +16,7 @@ pipeline
             steps
             {
                 echo "trigger_job_stage started.."
-                sleep(5s)
+                sleep(5)
                 echo "trigger_job_stage completed.."
 
             }
