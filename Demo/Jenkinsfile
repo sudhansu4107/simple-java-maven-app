@@ -1,6 +1,15 @@
 pipeline
 {
     agent any
+    parameters{
+        booleanParam(name:'deployment_ready',defaultValue:true,description:"Are we ready for deployment ?")
+        choice(name:"deployEnvironment",choices:['dev','test','production'],description:"select an environment to deploy.")
+        string(name:"authorName",defaultValue:"Sudhansu",description:"Provide the name of the author")
+    }
+    environment{
+        name='sudhansu'
+        role='QA'
+    }
     stages{
         stage('trigger_job_stage')
         {
