@@ -9,9 +9,9 @@ pipeline{
     agent any
     // declaring the environment block
     environment{
-         name='sudhansu'
-         age=28
-         isEmployed=true
+         name='sudhansu'    //string
+         age=28     // Integer
+         isEmployed=true  //boolean
     }
     // Declaring the parameters
     parameters{
