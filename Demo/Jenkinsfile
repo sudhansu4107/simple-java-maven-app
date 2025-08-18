@@ -1,0 +1,16 @@
+pipeline
+{
+    agent any
+    stages{
+        stage('trigger_job_stage')
+        {
+            steps
+            {
+                echo "trigger_job_stage started.."
+                sleep(5s)
+                echo "trigger_job_stage completed.."
+
+            }
+        }
+    }
+}
