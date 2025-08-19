@@ -1,5 +1,5 @@
 @Library('jenkins-shared-lib') _    // 👈 Load shared library at the very top
-import org.example.MathHelper       // 👈 Import class at the top
+import org.example.MathHelper       // 👈 Import class at the top.
 
 pipeline {
     agent any
