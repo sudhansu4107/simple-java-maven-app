@@ -62,15 +62,15 @@ pipeline{
         }
         success{
             emailext(
-                subject:'build success ${env.JOB_NAME}'
-                body:'Build passed successfully'
+                subject:'build success ${env.JOB_NAME}',
+                body:'Build passed successfully',
                 to:'sudhansu.gouda@equbot.com'
             )
         }
         failure{
   emailext(
-                subject:'build failure ${env.JOB_NAME}'
-                body:'Build failed'
+                subject:'build failure ${env.JOB_NAME}',
+                body:'Build failed',
                 to:'sudhansu.gouda@equbot.com'
             )
         }
