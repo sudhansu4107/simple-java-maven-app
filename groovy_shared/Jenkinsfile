@@ -1,4 +1,4 @@
-@Library('jenkins-shared-lib') _    // 👈 Load shared library at the very top
+@Library('jenkins-shared-lib@master') _    // 👈 Load shared library at the very top
 import org.example.MathHelper       // 👈 Import class at the top.
 
 pipeline {
