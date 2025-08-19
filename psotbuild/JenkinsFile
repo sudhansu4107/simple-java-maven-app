@@ -68,11 +68,14 @@ pipeline{
             )
         }
         failure{
-  emailext(
+            catchError(buildResult='SUCCESS',stageResult='SUCCESS')
+            {
+                 emailext(
                 subject:'build failure ${env.JOB_NAME}',
                 body:'Build failed',
                 to:'sudhansu.gouda@equbot.com'
             )
+            }
         }
         }
     }
