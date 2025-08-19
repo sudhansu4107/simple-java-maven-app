@@ -17,9 +17,9 @@ pipeline {
         stage('deploy-app')
         {
             steps{
-                greet('sudhansu')
-            deploy1.deployApp1()
-            deploy1.deployApp2()
+            greet('sudhansu')
+            deployApp1('App1')
+            deployApp2('App2')
             }
         }
         }
