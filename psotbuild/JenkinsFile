@@ -1,5 +1,9 @@
 pipeline{
     agent any
+    options
+    {
+        timestamps()
+    }
     stages
     {
         stage('Paralle Executor'){
@@ -29,6 +33,26 @@ pipeline{
 
             }        }
         }
+        }
+        stage('Exception Handling')
+        {
+            steps
+            {
+                script
+                {
+                    try{
+                        def result= 10/0
+                    }
+                    catch(Exception e)
+                    {
+                        echo "some exception occured:${e}"
+                    }
+                    finally{
+                        cleanWs()
+                        echo "work space got cleaned."
+                    }
+                }
+            }
         }
     }
 }
