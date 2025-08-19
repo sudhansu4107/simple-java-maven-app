@@ -1,0 +1,18 @@
+
+
+pipeline
+{
+    agent any
+    {
+        stages
+        {
+            stage('Shared_library')
+            {
+                steps
+                {
+                    echo 'Welcome to shared library steps'
+                }
+            }
+        }
+    }
+}
