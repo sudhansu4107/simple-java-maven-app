@@ -1,0 +1,220 @@
+pipeline {
+    agent any
+
+    parameters {
+    choice(
+        name: 'ENVIRONMENT',
+        choices: ['prod', 'preprod', 'demo'],
+        description: 'Select the environment to run the tests against'
+    )
+    string(
+        name: 'pythonPath',
+        defaultValue: 'python installation path',
+        description: 'Please provide the path where python is present \n example C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
+    )
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '2'))
+        timestamps()
+        skipDefaultCheckout()
+    }
+
+    environment {
+        PIP_CACHE        = "C:\\jenkins_cache\\pip"
+        MAIL_RECIPIENTS  = "sudhansu.gouda@quantumstreetai.com"
+        WORKSPACE_DIR    = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace"
+    }
+
+    stages {
+
+        stage("Send Start Email") {
+            steps {
+                script {
+                    echo "Sending start notification email..."
+                    mail to: "${env.MAIL_RECIPIENTS}",
+                         subject: "FA-Automation Daily Data Check Pipeline Triggered",
+                         body: """Hello Team,
+                        The FA-Daily Data Check Pipeline has been triggered.
+                        Selected Environment: ${params.ENVIRONMENT}
+                        Jenkins Build: ${env.BUILD_URL}
+                         """
+                }
+            }
+        }
+
+        stage("Workspace Setup") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        echo "==================== Selected Environment: ${params.ENVIRONMENT} ===================="
+                        cleanWs()
+                    }
+                }
+            }
+        }
+
+        stage("Git Clone - Automation Repo") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        withCredentials([
+                            usernamePassword(credentialsId: 'fa_automation', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')
+                        ]) {
+                            bat """
+                                git clone --branch fa_automation https://%GIT_USER%:%GIT_PASS%@github.com/EqubotAI/qa-automation-repo.git .
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Environment & Config Setup") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        withCredentials([
+                            file(credentialsId: 'DEMO_ENV_FILE', variable: 'DEMO_FILE'),
+                            file(credentialsId: 'PROD_ENV_FILE', variable: 'PROD_FILE'),
+                            file(credentialsId: 'PREPROD_ENV_FILE', variable: 'PREPROD_FILE')
+                        ]) {
+                            bat """
+                                if not exist config mkdir config
+
+                                if "%ENVIRONMENT%"=="demo" copy "%DEMO_FILE%" config\\demo_config.env
+                                if "%ENVIRONMENT%"=="prod" copy "%PROD_FILE%" config\\prod_config.env
+                                if "%ENVIRONMENT%"=="preprod" copy "%PREPROD_FILE%" config\\preprod_config.env
+
+                                if not exist venv (
+                                    "${params.pythonPath}" -m venv venv
+                                )
+
+                                call venv\\Scripts\\activate
+                                venv\\Scripts\\python.exe -m pip install --upgrade pip
+                                venv\\Scripts\\python.exe -m pip install --cache-dir "%PIP_CACHE%" -r documents/requirement.txt
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Dashboard - Core Tests") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        def tags = ["market_overview","ai_summery", "etf_analysis", "our_best_ideas", "events", "watchlist"]
+                        for (tag in tags) {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                retry(2) {
+                                    bat """
+                                        echo -------------------- Running ${tag} Tests --------------------
+                                        call venv\\Scripts\\activate
+                                        pabot --include ${tag} --variable ENV:%ENVIRONMENT% --outputdir output tests\\dashboard\\dashboard_test.robot
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Dashboard - Widget Tests") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        def tags = ["portfolio_widget","dashboard_report_mail"]
+                        for (tag in tags) {
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                retry(3) {
+                                    bat """
+                                        echo -------------------- Running ${tag} Tests --------------------
+                                        call venv\\Scripts\\activate
+                                        pabot --include ${tag} --variable ENV:%ENVIRONMENT% --outputdir output tests\\dashboard\\dashboard_test.robot
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Screener - Daily Data Validation") {
+            steps {
+                ws("${WORKSPACE_DIR}") {
+                    script {
+                        def tags = ["screener_daily_checks","screener_report_mail"]
+                        for (tag in tags) {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                retry(2) {
+                                    bat """
+                                        echo -------------------- Running ${tag} Tests --------------------
+                                        call venv\\Scripts\\activate
+                                        pabot --include ${tag} --variable ENV:%ENVIRONMENT% --outputdir output tests\\screener\\screener_tests.robot
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Publish Robot Results') {
+        steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    robot outputPath: 'reports',
+                    outputFileName: 'output.xml',
+                    reportFileName: 'report.html',
+                    logFileName: 'log.html'
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            script {
+                // Archive logs
+                archiveArtifacts artifacts: 'output/**'
+                // Parse Robot XML results to get summary
+                def resultSummary = ''
+                def xmlFiles = findFiles(glob: 'output/*.xml')
+                if (xmlFiles.size() > 0) {
+                    def totalPassed = 0
+                    def totalFailed = 0
+                    xmlFiles.each { file ->
+                        def xml = readFile(file.path)
+                        def matchesPassed = xml =~ /<stat total="(\d+)" passed="(\d+)" failed="(\d+)"/
+                        matchesPassed.each { m ->
+                            totalPassed += m[2].toInteger()
+                            totalFailed += m[3].toInteger()
+                        }
+                    }
+                    resultSummary = "Total Passed: ${totalPassed}, Total Failed: ${totalFailed}"
+                }
+
+                // Send completion email
+                echo "Sending completion email..."
+                mail to: "${env.MAIL_RECIPIENTS}",
+                     subject: "FA-Automation Daily Data Check Pipeline Completed - ${currentBuild.currentResult}",
+                     body: """Hello Team,
+                        The FA-Daily Data Check Pipeline has completed.
+                        Status: ${currentBuild.currentResult}
+                        Selected Environment: ${params.ENVIRONMENT}
+                        Jenkins Build: ${env.BUILD_URL}
+                      ${resultSummary}
+                   """
+                echo "Cleaning config files..."
+                bat """
+                if exist "%WORKSPACE_DIR%\\config\\*.env" (
+                del /F /Q "%WORKSPACE_DIR%\\config\\*.env")
+                """
+
+            }
+        }
+    }
+}
