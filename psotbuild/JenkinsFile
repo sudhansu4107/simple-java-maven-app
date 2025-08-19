@@ -48,11 +48,17 @@ pipeline{
                         echo "some exception occured:${e}"
                     }
                     finally{
-                        cleanWs()
-                        echo "work space got cleaned."
+                        echo "Exception handled successfully."
                     }
                 }
             }
+        }
+    }
+    post{
+        always
+        {
+            cleanWs()
+            echo "work space got cleaned."
         }
     }
 }
