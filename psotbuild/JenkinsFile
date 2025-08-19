@@ -9,6 +9,7 @@ pipeline{
             steps
             {
                             echo "Executing the first job."
+                            sleep(5)
             }
         }
         stage('exe-2')
@@ -16,12 +17,16 @@ pipeline{
             steps
             {
                             echo "Executing the second job."
+                                                        sleep(5)
+
             }        }
         stage('exe-3')
         {
             steps
             {
                             echo "Executing the third job."
+                                                        sleep(5)
+
             }        }
         }
         }
