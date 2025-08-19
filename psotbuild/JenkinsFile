@@ -2,6 +2,7 @@ pipeline{
     agent any
     stages
     {
+        stage('Paralle Executor'){
         parallel{
         stage('exe-1')
         {
@@ -22,6 +23,7 @@ pipeline{
             {
                             echo "Executing the third job."
             }        }
+        }
         }
     }
 }
