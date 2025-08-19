@@ -1,22 +1,16 @@
+@Library('jenkins-shared-lib') _    // 👈 Load shared library at the very top
+import org.example.MathHelper       // 👈 Import class at the top
 
-
-pipeline
-{
+pipeline {
     agent any
-    {
-        stages
-        {
-            stage('Shared_library')
-            {
-                steps
-                {
-                    echo 'Welcome to shared library steps'
-                    script
-                    {
-                        @Library('jenkins-shared-lib') _   // 👈 load the library by name
-                        import org.example.MathHelper      // for src classes
-                        echo "libraries imported successfully without any error."
-                    }
+    stages {
+        stage('Shared_library') {
+            steps {
+                echo 'Welcome to shared library steps'
+                script {
+                    def result = MathHelper.add(10, 20)
+                    echo "libraries imported successfully without any error."
+                    echo "10 + 20 = ${result}"
                 }
             }
         }
