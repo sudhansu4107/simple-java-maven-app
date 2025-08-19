@@ -13,6 +13,12 @@ pipeline {
                     echo "10 + 20 = ${result}"
                 }
             }
+        stage('deploy-app')
+        {
+            greet('sudhansu')
+            deployApp1()
+            deployApp2()
+        }
         }
     }
 }
