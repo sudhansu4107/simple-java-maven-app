@@ -1,81 +1,84 @@
-pipeline{
+pipeline {
     agent any
-    options
-    {
-        timestamps()
+
+    options {
+        timestamps()   // Show timestamps in console logs
     }
-    stages
-    {
-        stage('Paralle Executor'){
-        parallel{
-        stage('exe-1')
-        {
-            steps
-            {
-                            echo "Executing the first job."
-                            sleep(5)
+
+    stages {
+        stage('Parallel Executor') {
+            parallel {
+                stage('exe-1') {
+                    steps {
+                        echo "Executing the first job."
+                        sleep 5
+                    }
+                }
+                stage('exe-2') {
+                    steps {
+                        echo "Executing the second job."
+                        sleep 5
+                    }
+                }
+                stage('exe-3') {
+                    steps {
+                        echo "Executing the third job."
+                        sleep 5
+                    }
+                }
             }
         }
-        stage('exe-2')
-        {
-            steps
-            {
-                            echo "Executing the second job."
-                                                        sleep(5)
 
-            }        }
-        stage('exe-3')
-        {
-            steps
-            {
-                            echo "Executing the third job."
-                                                        sleep(5)
-
-            }        }
-        }
-        }
-        stage('Exception Handling')
-        {
-            steps
-            {
-                script
-                {
-                    try{
-                        def result= 10/0
-                    }
-                    catch(Exception e)
-                    {
-                        echo "some exception occured:${e}"
-                    }
-                    finally{
+        stage('Exception Handling') {
+            steps {
+                script {
+                    try {
+                        def result = 10 / 0
+                        echo "Result = ${result}"
+                    } catch (Exception e) {
+                        echo "Some exception occurred: ${e.message}"
+                    } finally {
                         echo "Exception handled successfully."
                     }
                 }
             }
         }
     }
-    post{
-        always
-        {
+
+    post {
+        always {
             cleanWs()
-            echo "work space got cleaned."
+            echo "Workspace cleaned."
         }
-        success{
-            emailext(
-                subject:'build success ${env.JOB_NAME}',
-                body:'Build passed successfully',
-                to:'sudhansu.gouda@equbot.com'
-            )
-        }
-        failure{
-            catchError(buildResult='SUCCESS',stageResult='SUCCESS')
-            {
-                 emailext(
-                subject:'build failure ${env.JOB_NAME}',
-                body:'Build failed',
-                to:'sudhansu.gouda@equbot.com'
-            )
+
+        success {
+            script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    emailext(
+                        subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """<p>✅ Build passed successfully</p>
+                                 <p>Job: ${env.JOB_NAME}</p>
+                                 <p>Build Number: ${env.BUILD_NUMBER}</p>""",
+                        mimeType: 'text/html',
+                        to: "sudhansu.gouda@equbot.com"
+                    )
+                }
             }
         }
+
+        failure {
+            script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    emailext(
+                        subject: "Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """<p>❌ Build failed</p>
+                                 <p>Job: ${env.JOB_NAME}</p>
+                                 <p>Build Number: ${env.BUILD_NUMBER}</p>""",
+                        mimeType: 'text/html',
+                        to: "sudhansu.gouda@equbot.com"
+                    )
+                }
+            }
         }
     }
+}
