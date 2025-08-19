@@ -18,8 +18,8 @@ pipeline {
         {
             steps{
             greet('sudhansu')
-            deployApp1('App1')
-            deployApp2('App2')
+            deployApp('App1')
+            deployApp('App2')
             }
         }
         }
