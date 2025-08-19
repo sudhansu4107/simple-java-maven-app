@@ -60,5 +60,20 @@ pipeline{
             cleanWs()
             echo "work space got cleaned."
         }
+        success{
+            emailext(
+                subject:'build success ${env.JOB_NAME}'
+                body:'Build passed successfully'
+                to:'sudhansu.gouda@equbot.com'
+            )
+        }
+        failure{
+  emailext(
+                subject:'build failure ${env.JOB_NAME}'
+                body:'Build failed'
+                to:'sudhansu.gouda@equbot.com'
+            )
+        }
+        }
     }
 }
