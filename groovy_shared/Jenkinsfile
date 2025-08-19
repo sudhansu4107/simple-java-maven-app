@@ -15,9 +15,11 @@ pipeline {
             }
         stage('deploy-app')
         {
-            greet('sudhansu')
+            steps{
+                greet('sudhansu')
             deployApp1()
             deployApp2()
+            }
         }
         }
     }
